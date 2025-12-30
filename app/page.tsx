@@ -84,7 +84,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        <button type="submit" disabled={loading} className="button">
+        <button type="submit"
+          disabled={loading || !content.trim()}
+          aria-busy={loading}
+          className="button">
           {loading ? "Creating..." : "Create Paste"}
         </button>
       </form>
@@ -98,7 +101,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {error && <div className="error"> {error}</div>}
+      {error && <div role="alert" className="error"> {error}</div>}
     </main>
   );
 }

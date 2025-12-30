@@ -4,7 +4,7 @@ import { getNow } from "@/lib/time";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
     console.log("API params.id:", id);

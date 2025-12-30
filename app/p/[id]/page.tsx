@@ -6,6 +6,14 @@ type PasteResponse = {
     expires_at: string | null;
 };
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+    return {
+        title: `Paste ${params.id}`,
+        description: "Shared text paste",
+    };
+}
+
+
 async function getPaste(id: string): Promise<PasteResponse> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/pastes/${id}`, { cache: "no-store" });
     if (!res.ok) notFound();
@@ -15,9 +23,15 @@ async function getPaste(id: string): Promise<PasteResponse> {
 export default async function PastePage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
+
+    if (!id || typeof id !== "string") {
+        notFound();
+    }
+
+
     const paste = await getPaste(id);
 
     return (
