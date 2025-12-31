@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PasteList from "./_component/PasteList";
 
 export default function HomePage() {
   const [content, setContent] = useState("");
@@ -30,6 +31,8 @@ export default function HomePage() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Failed to create paste");
+
+      console.log(data);
 
       setResultUrl(data.url);
       setContent("");
@@ -92,14 +95,7 @@ export default function HomePage() {
         </button>
       </form>
 
-      {resultUrl && (
-        <div className="success">
-          <p> Paste created</p>
-          <a href={resultUrl} target="_blank">
-            {resultUrl}
-          </a>
-        </div>
-      )}
+      <PasteList />
 
       {error && <div role="alert" className="error"> {error}</div>}
     </main>

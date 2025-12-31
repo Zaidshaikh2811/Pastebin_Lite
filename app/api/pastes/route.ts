@@ -41,3 +41,34 @@ export async function POST(req: NextRequest) {
         );
     }
 }
+
+export async function GET() {
+    try {
+        const result = await pool.query(`
+      SELECT id, content
+      FROM pastes
+      WHERE
+        (expires_at IS NULL OR expires_at > NOW())
+        AND (max_views IS NULL OR view_count < max_views)
+      ORDER BY created_at DESC
+      LIMIT 20
+    `);
+
+        const pastes = result.rows.map((row) => ({
+            id: row.id,
+            snippet:
+                row.content.length > 100
+                    ? row.content.slice(0, 100) + "..."
+                    : row.content,
+            url: `/p/${row.id}`,
+        }));
+
+        return Response.json({ pastes });
+    } catch (err) {
+        console.error("FETCH_PASTES_FAILED", err);
+        return Response.json(
+            { error: "Failed to fetch pastes" },
+            { status: 500 }
+        );
+    }
+}
