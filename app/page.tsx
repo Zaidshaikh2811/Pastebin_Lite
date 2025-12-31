@@ -3,6 +3,7 @@
 import { useState } from "react";
 import PasteList from "./_component/PasteList";
 
+
 export default function HomePage() {
   const [content, setContent] = useState("");
   const [ttl, setTtl] = useState("");
@@ -10,6 +11,7 @@ export default function HomePage() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,12 +34,12 @@ export default function HomePage() {
 
       if (!res.ok) throw new Error(data.error || "Failed to create paste");
 
-      console.log(data);
-
       setResultUrl(data.url);
       setContent("");
       setTtl("");
       setMaxViews("");
+      setRefreshKey((prev) => prev + 1);
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -95,7 +97,7 @@ export default function HomePage() {
         </button>
       </form>
 
-      <PasteList />
+      <PasteList refreshKey={refreshKey} />
 
       {error && <div role="alert" className="error"> {error}</div>}
     </main>

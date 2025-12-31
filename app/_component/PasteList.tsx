@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function PasteList() {
+export default function PasteList({ refreshKey }: { refreshKey: number }) {
     const [urls, setUrls] = useState<{ id: string; snippet: string; url: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export default function PasteList() {
         }
 
         fetchPastes();
-    }, []);
+    }, [refreshKey]);
 
     if (loading) {
         return <p style={{ marginTop: 16 }}>Loading pastes...</p>;
